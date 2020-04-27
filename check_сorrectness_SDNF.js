@@ -1,70 +1,18 @@
-"use strict";
+var unaryOrBinaryComplexFormula = new RegExp('([(][!]([A-Z])[)])|([(]([A-Z])((&)|(\\|)|(->)|(~))([A-Z])[)])','g');
+var unaryOrBinaryComplexFormula1 = new RegExp('([(][!]([A-Z])[)])|([(]([A-Z])((&)|(\\|)|(->)|(~))([A-Z])[)])');
+var atomOrConstant = new RegExp('([A-Z]|[0-1])', 'g');
+var replaceFormula = "R";
 
 function checkCorrectnessSDNF() {
-    let formula = document.getElementById("probablySDNF").value.toString();
+    let formula = document.getElementById("probablySDNF").value;
     let answer = document.getElementById("answer");
 
-    //Проверка наличия скобок
-    if (formula.match(/\(|\)/g) == null) {
-        answer.innerHTML = "Отсутствуют скобки.";
-        return;
+    if (isFormula(formula)) {
+        answer.innerHTML = checkCorrectnessConjunctions(formula);  //Проверка корректности конъюнкций
     }
-    let allBrackets = formula.match(/\(|\)/g);
-
-    //Проверка наличия лишних символов
-    if (formula.match(/(?!([A-Z]|&|\||\(|\)|!))./g)) {  //(?!) - искать любые символы, кроме заключённых в данные скобки
-        answer.innerHTML = "Некорректные символы.";
-        return;
-    }
-
-    //Проверка чётности количества скобок
-    if (allBrackets.length % 2 == 0) {
-        if (checkGrammar(formula)) {  //Проверка соответствия грамматике
-            if (formula.match(/\)\|\(/g))  //Проверка наличия конъюнкций
-                answer.innerHTML = checkCorrectnessConjunctions(formula);  //Проверка корректности конъюнкций
-            else
-                answer.innerHTML = "Конъюнкции не найдены.";
-        }
-        else
-            answer.innerHTML = "Формула не соответствует правилам грамматики.";
-    }
-    else
-        answer.innerHTML = "Нечётное количество скобок.";
+    else 
+        answer.innerHTML = "Не формула";
 }
-
-
-function checkGrammar(formula) {
-    //Массивы унарных и бинарных сложных подформул 
-    let arrayUnaryComplexFormulas, arrayBinaryComplexFormulas; 
-    do {
-        //Поиск унарных сложных подформул 
-        arrayUnaryComplexFormulas = formula.match(/\(![A-Z01]\)/g);
-        //Если найдены унарные сложные подформулы
-        if (arrayUnaryComplexFormulas) 
-            arrayUnaryComplexFormulas.forEach(function (unaryComplexFormula) {
-                formula = formula.replace(unaryComplexFormula, 1); //Замена унарных сложных подформул на константу
-            });
-        
-        //Поиск бинарных сложных подформул 
-        arrayBinaryComplexFormulas = formula.match(/\([A-Z01](([&|~]|(->))[A-Z01])*\)/g);
-        //Если найдены бинарные сложные подформулы
-        if (arrayBinaryComplexFormulas) 
-            arrayBinaryComplexFormulas.forEach(function (binaryComplexFormula) {
-                formula = formula.replace(binaryComplexFormula, "1"); //Замена бинарных сложных подформул на константу
-            });
-    } while (arrayUnaryComplexFormulas || arrayBinaryComplexFormulas); //Пока в выражении есть унарные или бинарные сложные подформулы
-    
-	
-	
-    //Если вы выражении остались атомы или другие константы, то происходит их замена
-	if (formula != "1")
-		formula = formula.replace(/\([A-Z01](([&|~]|(->))[A-Z01])*\)/g, "1");
- 
-        
-    //Если выражение соответствует грамматике, то в конце проверки в выражении останется только одна константа
-    return formula == "1"; 
-}
-
 
 function checkCorrectnessConjunctions(formula) {
     //Разбиение исходной формулы на конъюнкции
@@ -100,4 +48,18 @@ function checkCorrectnessConjunctions(formula) {
         }
     }
     return "Формула является СДНФ.";
+}
+
+function isFormula(formula) { //проверка является ли строка формулой
+    let tempFormula
+    while (formula != tempFormula) {
+        tempFormula = formula;
+        formula = formula.replace(unaryOrBinaryComplexFormula, replaceFormula);
+    }
+    tempFormula = 0;
+    if ((formula.length == 1)) {
+        return true;
+    } else {
+        return false;
+    }
 }

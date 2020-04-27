@@ -1,12 +1,11 @@
-
 const left = '('
 const right = ')'
-const conjunction2 = '&'
-const disjunction2 = '|'
-const negation2 = '!'
+const conjunction = '&'
+const disjunction = '|'
+const negation = '!'
 const allLetters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'
 
-function generate2() {
+function generate() {
     let letters = ''
     let numberOfVariables = Math.round(Math.random() + 2)
     let result = ''
@@ -26,7 +25,6 @@ function generate2() {
         tableOfTruth[i][numberOfVariables] = rand()
 
     }
-    console.log(tableOfTruth)
 
     for (let i = 0; i < tableOfTruth.length; i++) {
         let temp = tableOfTruth[i][numberOfVariables]
@@ -34,25 +32,23 @@ function generate2() {
             continue
         }
             if (result.length > 0){
-                result += disjunction2
+                result += right + disjunction + left
             }
-            result += left
             for (let j = 0; j < numberOfVariables; j++) {
                 if (tableOfTruth[i][j] == 1) {
-                    result += left + negation2 + letters[j] + right
+                    result += left + negation + letters[j] + right
                 } else {
                     result += letters[j]
                 }
                 if (j < letters.length- 1) {
-                    result += conjunction2
+                    result += conjunction
                 }
             }
-            result += right
     }
     if (result.length > 0){
         result = left + result + right
     }
-    document.getElementById('probablySDNF').value = result;
+    document.getElementById('probablySDNF').value = left + result + right;
 
 }
 
@@ -69,4 +65,19 @@ function rand() {
     } else {
         return 1
     }
+}
+
+function spoil() {
+    let choice = rand()
+    switch (choice) {
+  case 0:
+    return negation
+    break;
+  case 1:
+    return ''
+      break;
+  default:
+    return ''
+}
+
 }
