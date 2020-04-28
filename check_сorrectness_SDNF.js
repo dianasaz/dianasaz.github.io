@@ -11,12 +11,12 @@ function checkCorrectnessSDNF(formula) {
     //Проверка наличия лишних символов
     if (formula.match(/(?!([A-Z]|&|\||\(|\)|!))./g)) {  //(?!) - искать любые символы, кроме заключённых в данные скобки
         answer.innerHTML = "Некорректные символы.";
-        return;
     }
 
     if (formula.match(/\([A-Z]\)/g)){
         answer.innerHTML = "Введенная строка не является СДНФ";
     }
+
     else if (formula != "") {
         if (formula.length == 1) {
             let reg = /[A-Z]/g
@@ -27,14 +27,11 @@ function checkCorrectnessSDNF(formula) {
             }
         } else {
            if (checkWithRegularExpressionFormula(formula)) {  //Проверка соответствия грамматике
-                if (formula.match(/\)\|\(/g))  //Проверка наличия конъюнкций
                     if (checkAllConjunctions(formula, '|')) {
                         answer.innerHTML = "Формула является СДНФ.";
                     } else {
                         answer.innerHTML = "Формула не является СДНФ."
                     }
-                else
-                    answer.innerHTML = "Конъюнкции не найдены.";
             }
             else
                 answer.innerHTML = "Формула не соответствует правилам грамматики.";
