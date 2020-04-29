@@ -45,7 +45,6 @@ function generate() {
             formula += ')';
         }
     }
-
     document.getElementById('probablySDNF').value = formula;
 }
 
