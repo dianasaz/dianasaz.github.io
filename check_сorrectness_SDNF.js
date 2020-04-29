@@ -1,8 +1,8 @@
 function checkCorrectnessSDNF() {
-    let formula = document.getElementById("probablySDNF").value;
-    let answer = document.getElementById("answer");
-    let choice = document.getElementById("chooseIfSDNF").value;
-    let choiceAnswer = document.getElementById("choiceAnswer");
+    let formula = document.getElementById('probablySDNF').value;
+    let answer = document.getElementById('answer');
+    let choice = document.getElementById('chooseIfSDNF').value;
+    let choiceAnswer = document.getElementById('choiceAnswer');
 
     //Проверка наличия лишних символов
     if (formula.match(/(?!([A-Z]|&|\||\(|\)|!))./g)) {  //(?!) - искать любые символы, кроме заключённых в данные скобки
