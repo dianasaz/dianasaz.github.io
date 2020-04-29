@@ -1,83 +1,54 @@
-const left = '('
-const right = ')'
-const conjunction = '&'
-const disjunction = '|'
-const negation = '!'
-const allLetters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'
-
 function generate() {
-    let letters = ''
-    let numberOfVariables = Math.round(Math.random() + 2)
-    let result = ''
+    let countOfArgs = getRandomInt(3);
+    let countOfGroups = getRandomInt(Math.pow(2, countOfArgs));
+    let formula = '';
+    var variablesCodes = [ 'A', 'B', 'C'];
 
-    letters += allLetters.substr(0, numberOfVariables)
 
-    let rows = 2 ** numberOfVariables
-    let tableOfTruth = []
+    for (i = 0; i < countOfGroups; i++) {
+        let countOfArgsInParticualarGroup = countOfArgs - getRandomInt(countOfArgs) + 1;
+        let group = '';
 
-    //fill table of truth
-    for (let i = 0; i < rows; i++) {
-        tableOfTruth[i] = []
-        let bits = shift(numberOfVariables, i.toString(2))
-        for (let j = 0; j < bits.length; j++) {
-            tableOfTruth[i][j] = parseInt(bits.charAt(j))
+        if (countOfGroups !== 1 && i < countOfGroups - 1) {
+            formula += '(';
         }
-        tableOfTruth[i][numberOfVariables] = rand()
 
-    }
+        for (j = 0; j < countOfArgsInParticualarGroup; j++) {
+            if (countOfArgsInParticualarGroup !== 1 && j < countOfArgsInParticualarGroup - 1) {
+                group += '(';
+            }
 
-    for (let i = 0; i < tableOfTruth.length; i++) {
-        let temp = tableOfTruth[i][numberOfVariables]
-        if (temp == 0){
-            continue
+            let isNegative = (Math.random() >= 0.5);
+            group += (isNegative ? '(!' : '') + variablesCodes[j] + (isNegative ? ')' : '');
+            if (j < countOfArgsInParticualarGroup - 1) {
+                let random  = Math.random();
+                group += ((random >= 0.2) ? '|' : (random >= 0.1 ? '&' : (random >= 0.05 ? '~' : '->')));
+            }
         }
-            if (result.length > 0){
-                result += right + disjunction + left
+
+        for (j = 0; j < countOfArgsInParticualarGroup - 1; j++) {
+            if (countOfArgsInParticualarGroup !== 1) {
+                group += ')';
             }
-            for (let j = 0; j < numberOfVariables; j++) {
-                if (tableOfTruth[i][j] == 1) {
-                    result += left + negation + letters[j] + right
-                } else {
-                    result += letters[j]
-                }
-                if (j < letters.length- 1) {
-                    result += conjunction
-                }
-            }
-    }
-    if (result.length > 0){
-        result = left + result + right
-    }
-    document.getElementById('probablySDNF').value = left + result + right;
+        }
 
+        formula += group;
+
+        if (i < countOfGroups - 1) {
+            let random  = Math.random();
+            formula += ((random >= 0.3) ? '|' : (random >= 0.2 ? '&' : (random >= 0.1 ? '~' : '->')));
+        }
+    }
+
+    for (j = 0; j < countOfGroups - 1; j++) {
+        if (countOfGroups !== 1) {
+            formula += ')';
+        }
+    }
+
+    document.getElementById('probablySDNF').value = formula;
 }
 
-function shift(size, bits) {
-    while (bits.length < size) {
-        bits = '0' + bits
-    }
-    return bits
-}
-
-function rand() {
-    if (Math.random() - 0.5 <= 0) {
-        return 0
-    } else {
-        return 1
-    }
-}
-
-function spoil() {
-    let choice = rand()
-    switch (choice) {
-  case 0:
-    return negation
-    break;
-  case 1:
-    return ''
-      break;
-  default:
-    return ''
-}
-
+function getRandomInt(max) {
+    return Math.floor(Math.random() * Math.floor(max)) + 1;
 }

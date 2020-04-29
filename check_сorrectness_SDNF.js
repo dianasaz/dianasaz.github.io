@@ -1,9 +1,5 @@
-function checking(){
+function checkCorrectnessSDNF() {
     let formula = document.getElementById("probablySDNF").value;
-    checkCorrectnessSDNF(formula);
-}
-
-function checkCorrectnessSDNF(formula) {
     let answer = document.getElementById("answer");
     let choice = document.getElementById("chooseIfSDNF").value;
     let choiceAnswer = document.getElementById("choiceAnswer");
@@ -45,7 +41,7 @@ function checkCorrectnessSDNF(formula) {
     if (a || b)  {
         choiceAnswer.innerHTML = "Вы были правы";
     } else {
-        choiceAnswer.innerHTML = "Вы не угадали";
+        choiceAnswer.innerHTML = "Вы не правы";
     }
 }
 
